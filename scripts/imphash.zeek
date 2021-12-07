@@ -4,7 +4,7 @@ module IMPHASH;
 @load spicy-analyzers/pe
 
 redef record PE::Info += {
-    imphash_vector: vector of string &optional;
+    imphash_vector: vector of string &optional &log;
     imphash: string &optional &log;
 };
 
