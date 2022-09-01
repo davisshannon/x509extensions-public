@@ -8,7 +8,6 @@ tags = PE, IMPHASH, spicy, windows, portable, executable, fingerprint
 
 depends = 
 	zeek >=4.0.0
-	zeek/spicy-plugin *
 	zeek/spicy-analyzers *
 
 [template]
