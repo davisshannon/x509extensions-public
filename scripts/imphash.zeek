@@ -1,56 +1,42 @@
-module IMPHASH;
+module X509Extensions;
+  
+@load base/files/x509
 
-@load base/files/pe
-@load spicy-pe
+export {
 
-redef record PE::Info += {
-    imphash_vector: vector of string &optional &log;
-    imphash: string &optional &log;
-};
+  redef enum Log::ID += { LOG };
 
-const extensions: pattern = /\.dll$/i | /\.sys$/i | /\.ocx$/i;
-const winsock_dll_patterns: pattern = /^ws2_32$/i | /^wsock32$/i ;
+  type Info: record {
+    ## Name of extension
+    name: string &log;
+    ## Short name of extension
+    short_name: string &log;
+    ## OID value of extension
+    oid: string &log;
+    ## Is the extension critical
+    critical: bool &log;
+    ## Value of extension
+    value: string &log;
+    fingerprint: string &log;
+  };
 
-event pe_import_table(f: fa_file, it: PE::ImportTable) 
+}
+
+event zeek_init() {
+  Log::create_stream(LOG, [$columns=Info, $path="x509_extensions"]);
+}
+
+event x509_extension(f: fa_file, ext: X509::Extension) {
+  if ( f$info?$x509 ) {
     {
-    f$pe$imphash_vector = vector();
-    for (i in it$entries)
-        {
-        local entry = it$entries[i];
-        
-        if (extensions !in entry$dll)
-            next;
-        
-        local dll_stripped = to_lower(split_string1(entry$dll, /\./ )[0]);
-        
-        for (j in entry$imports)
-            {
-            local import = entry$imports[j];
-            if (import?$name)
-                {
-                f$pe$imphash_vector += dll_stripped + "." + to_lower(import$name);
-                next;
-                }
-        
-            if (dll_stripped == "oleaut32")
-                {
-                f$pe$imphash_vector += dll_stripped + "." + oleaut32[import$ordinal];
-                next;
-                }
+    f$info$x509$extensions += ext;
 
-            if (winsock_dll_patterns in dll_stripped)
-                {
-                f$pe$imphash_vector += dll_stripped + "." + ws2_32[import$ordinal];
-                next;
-                }
-            # Catch all for dlls that use ordinals and are not in the dictionary
-            if (!import?$name)
-                {
-                f$pe$imphash_vector += dll_stripped + "." + fmt("ord%s",import$ordinal);
-                next;
-                }
-            }
-        }
-    f$pe$imphash = md5_hash(join_string_vec(f$pe$imphash_vector,","));
+    Log::write(LOG, Info($name=ext$name,
+                         $short_name=ext$short_name,
+                         $oid=ext$oid,
+                         $critical=ext$critical,
+                         $value=ext$value,
+                         $fingerprint=f$info$x509$fingerprint));
     }
-
+  }
+}
