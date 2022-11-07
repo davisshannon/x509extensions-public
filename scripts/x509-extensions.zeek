@@ -21,6 +21,8 @@ export {
     value: string &log;
     ## X509 fingerprint
     fingerprint: string &log;
+    ## Unique ID for the connection.
+		uid: string &log;
   };
 
 }
@@ -29,7 +31,7 @@ event zeek_init() {
   Log::create_stream(LOG, [$columns=Info, $path="x509_extensions"]);
 }
 
-event x509_extension(f: fa_file, ext: X509::Extension) {
+event x509_extension(f: fa_file, ext: X509::Extension, c: connection) {
   if ( f$info?$x509 ) {
     {
 
@@ -39,7 +41,8 @@ event x509_extension(f: fa_file, ext: X509::Extension) {
                          $critical=ext$critical,
                          $value=ext$value,
                          $fingerprint=f$info$x509$fingerprint,
-                         $ts=network_time()));
+                         $ts=network_time()
+                         $uid=c$uid));
     }
   }
 }
