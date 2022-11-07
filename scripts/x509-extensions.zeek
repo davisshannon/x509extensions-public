@@ -29,7 +29,6 @@ event zeek_init() {
 event x509_extension(f: fa_file, ext: X509::Extension) {
   if ( f$info?$x509 ) {
     {
-    f$info$x509$extensions += ext;
 
     Log::write(LOG, Info($name=ext$name,
                          $short_name=ext$short_name,
