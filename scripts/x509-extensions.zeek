@@ -8,7 +8,7 @@ export {
 
   type Info: record {
     ## Current timestamp.
-		ts: time &log;
+    ts: time &log;
     ## Name of extension
     name: string &log;
     ## Short name of extension
