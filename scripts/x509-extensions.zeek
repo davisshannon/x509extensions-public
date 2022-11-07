@@ -37,7 +37,8 @@ event x509_extension(f: fa_file, ext: X509::Extension) {
                          $oid=ext$oid,
                          $critical=ext$critical,
                          $value=ext$value,
-                         $fingerprint=f$info$x509$fingerprint));
+                         $fingerprint=f$info$x509$fingerprint,
+                         $ts=network_time()));
     }
   }
 }
