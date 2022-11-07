@@ -22,7 +22,7 @@ export {
     ## X509 fingerprint
     fingerprint: string &log;
     ## Unique ID for the connection.
-		uid: string &log;
+    uid: string &log;
   };
 
 }
