@@ -19,6 +19,7 @@ export {
     critical: bool &log;
     ## Value of extension
     value: string &log;
+    ## X509 fingerprint
     fingerprint: string &log;
   };
 
