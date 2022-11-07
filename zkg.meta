@@ -1,19 +1,16 @@
 [package]
 script_dir = scripts
 test_command = cd testing && btest -c btest.cfg
-summary = This package calculates the "imphash" of portable executables and populates Zeek's pe.log
-description = This package calculates the "imphash" of portable executables and populates Zeek's pe.log
-	For information on imphash, refer to https://www.mandiant.com/resources/tracking-malware-import-hashing.
-tags = PE, IMPHASH, spicy, windows, portable, executable, fingerprint
+summary = This package extracts X509 Extensions from X509 certificate files
+description = This package extracts X509 Extensions from X509 certificate files into a new log called x509_extensions.log.
 
 depends = 
 	zeek >=4.0.0
-	zeek/spicy-analyzers *
 
 [template]
 source = package-template
 version = v0.1.1
 
 [template_vars]
-name = IMPHASH
+name = X509Extensions
 
