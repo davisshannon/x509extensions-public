@@ -7,6 +7,8 @@ export {
   redef enum Log::ID += { LOG };
 
   type Info: record {
+    ## Current timestamp.
+		ts: time &log;
     ## Name of extension
     name: string &log;
     ## Short name of extension
